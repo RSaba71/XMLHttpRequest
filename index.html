@@ -1,30 +1,48 @@
 <!DOCTYPE html>
 <html>
+<style>
+table,th,td {
+  border : 1px solid black;
+  border-collapse: collapse;
+}
+th,td {
+  padding: 5px;
+}
+</style>
 <body>
 
 <h2>The XMLHttpRequest Object</h2>
 
-<h2>Retrieve data from XML file</h2>
+<button type="button" onclick="loadDoc()">Get my CD collection</button>
+<br><br>
+<table id="demo"></table>
 
-<p><b>Status:</b> <span id="A1"></span></p>
-<p><b>Status text:</b> <span id="A2"></span></p>
-<p><b>Response:</b> <span id="A3"></span></p>
-
-<button onclick="loadDoc('Data.xml')">Get XML data</button>
-
-<script> 
-function loadDoc(url) {
+<script>
+function loadDoc() {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      document.getElementById('A1').innerHTML = this.status;
-      document.getElementById('A2').innerHTML = this.statusText;
-      document.getElementById('A3').innerHTML = this.responseText;
+      myFunction(this);
     }
   };
-  xhttp.open("GET", url, true);
+  xhttp.open("GET", "Data.xml", true);
   xhttp.send();
 }
+function myFunction(xml) {
+  var i;
+  var xmlDoc = xml.responseXML;
+  var table="<tr><th>Artist</th><th>Title</th></tr>";
+  var x = xmlDoc.getElementsByTagName("CD");
+  for (i = 0; i <x.length; i++) { 
+    table += "<tr><td>" +
+    x[i].getElementsByTagName("ARTIST")[0].childNodes[0].nodeValue +
+    "</td><td>" +
+    x[i].getElementsByTagName("TITLE")[0].childNodes[0].nodeValue +
+    "</td></tr>";
+  }
+  document.getElementById("demo").innerHTML = table;
+}
 </script>
+  
 </body>
 </html>
